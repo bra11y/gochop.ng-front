@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { Product, Category, Store, Order } from '@/types';
+import { supabaseAPI } from './supabase';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+const USE_SUPABASE = true; // Toggle for MVP - use Supabase by default
 
 class ApiClient {
   private client = axios.create({
@@ -44,6 +46,9 @@ class ApiClient {
 
   // Store methods
   async createStore(data: any) {
+    if (USE_SUPABASE) {
+      return await supabaseAPI.createStore(data);
+    }
     const response = await this.client.post('/stores', data);
     return response.data;
   }
