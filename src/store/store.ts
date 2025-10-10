@@ -1,19 +1,24 @@
 import { create } from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-// Simplified type definitions to avoid TypeScript deep instantiation issues
+
+// Simple type definitions to avoid TypeScript deep instantiation issues
 interface Store {
   id: string;
   name: string;
   slug: string;
   email: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  status: string;
-  settings?: any;
-  theme?: any;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  delivery_radius_km: number | null;
+  status: 'pending' | 'active' | 'suspended';
+  settings: any;
+  theme: any;
   created_at: string;
   updated_at: string;
 }
@@ -23,7 +28,7 @@ interface Category {
   store_id: string;
   name: string;
   slug: string;
-  emoji?: string;
+  icon: string | null;
   position: number;
   active: boolean;
   created_at: string;
@@ -35,14 +40,14 @@ interface Product {
   store_id: string;
   category_id: string;
   name: string;
-  description?: string;
+  description: string | null;
   price: number;
-  compare_at_price?: number;
+  compare_at_price: number | null;
   stock_quantity: number;
   track_inventory: boolean;
   active: boolean;
   slug: string;
-  image_url?: string;
+  image_url: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -81,7 +81,7 @@ function CheckoutPageContent() {
         total_price: item.price * item.quantity,
         product_snapshot: {
           name: item.name,
-          image: item.image,
+          image: item.image_url,
           description: item.description
         }
       }));

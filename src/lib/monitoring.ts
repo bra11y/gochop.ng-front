@@ -1,20 +1,14 @@
-import * as Sentry from '@sentry/nextjs';
-
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: process.env.NODE_ENV,
-  integrations: [
-    new Sentry.BrowserTracing(),
-  ],
-  tracesSampleRate: 0.1,
-});
-
+// Simple logging utility (Sentry can be added later)
 export function logError(error: Error, context?: any) {
-  console.error(error);
+  console.error('Error:', error);
   
+  if (context) {
+    console.error('Context:', context);
+  }
+  
+  // In production, you would send this to your logging service
   if (process.env.NODE_ENV === 'production') {
-    Sentry.captureException(error, {
-      extra: context,
-    });
+    // TODO: Add proper error tracking service
+    console.error('Production error:', { error: error.message, context });
   }
 }

@@ -3,19 +3,53 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { storeQueries, categoryQueries, productQueries, subscriptions } from '@/lib/supabase/queries';
 import { useStoreStore } from '@/store/store';
-// Simplified type definition to avoid TypeScript deep instantiation issues
+
+// Simple local types to avoid complex type instantiation
 interface Store {
   id: string;
   name: string;
   slug: string;
   email: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  status: string;
-  settings?: any;
-  theme?: any;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  delivery_radius_km: number | null;
+  status: 'pending' | 'active' | 'suspended';
+  settings: any;
+  theme: any;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Category {
+  id: string;
+  store_id: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+  position: number;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Product {
+  id: string;
+  store_id: string;
+  category_id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  compare_at_price: number | null;
+  stock_quantity: number;
+  track_inventory: boolean;
+  active: boolean;
+  slug: string;
+  image_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -36,7 +70,7 @@ export function useStore(slug?: string) {
   } = useStoreStore();
 
   // Query store by slug
-  const storeQuery = useQuery({
+  const storeQuery = useQuery<Store>({
     queryKey: ['store', slug],
     queryFn: async () => {
       if (!slug) throw new Error('No slug provided');
@@ -48,7 +82,7 @@ export function useStore(slug?: string) {
   });
 
   // Query categories
-  const categoriesQuery = useQuery({
+  const categoriesQuery = useQuery<Category[]>({
     queryKey: ['categories', currentStore?.id],
     queryFn: async () => {
       if (!currentStore?.id) throw new Error('No store ID');
@@ -59,7 +93,7 @@ export function useStore(slug?: string) {
   });
 
   // Query products
-  const productsQuery = useQuery({
+  const productsQuery = useQuery<Product[]>({
     queryKey: ['products', currentStore?.id],
     queryFn: async () => {
       if (!currentStore?.id) throw new Error('No store ID');
@@ -135,7 +169,7 @@ export function useCreateStore() {
   const queryClient = useQueryClient();
   const { setCurrentStore } = useStoreStore();
 
-  return useMutation({
+  return useMutation<Store, Error, any>({
     mutationFn: storeQueries.create,
     onSuccess: (store) => {
       setCurrentStore(store);

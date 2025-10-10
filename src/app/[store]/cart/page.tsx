@@ -75,7 +75,7 @@ export default function CartPage() {
                     <div key={item.id} className="flex items-center gap-4 pb-4 border-b border-gray-100 last:border-b-0">
                       <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
                         <img
-                          src={item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=100&fit=crop'}
+                          src={item.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=100&fit=crop'}
                           alt={item.name}
                           className="w-full h-full object-cover"
                         />

@@ -4,6 +4,8 @@ export { storeQueries, categoryQueries, productQueries, orderQueries, subscripti
 export type { Database } from './types'
 
 // Re-export commonly used types
+import type { Database } from './types'
+
 export type Store = Database['public']['Tables']['stores']['Row']
 export type Product = Database['public']['Tables']['products']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']

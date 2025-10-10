@@ -1,7 +1,23 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { toast } from 'react-hot-toast';
-import { CartItem, Product } from '@/types';
+
+// Define product interface directly to match what we actually use
+interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  compare_at_price?: number;
+  store_id: string;
+  stock_quantity: number;
+  active: boolean;
+  image_url?: string;
+}
+
+interface CartItem extends Product {
+  quantity: number;
+}
 
 interface CartStore {
   items: CartItem[];
@@ -49,8 +65,8 @@ export const useCartStore = create<CartStore>()(
           if (existingItem) {
             // Check stock limit
             const newQuantity = existingItem.quantity + 1;
-            if (product.stockQuantity && newQuantity > product.stockQuantity) {
-              toast.error(`Only ${product.stockQuantity} items available`);
+            if (product.stock_quantity && newQuantity > product.stock_quantity) {
+              toast.error(`Only ${product.stock_quantity} items available`);
               return state;
             }
             
@@ -61,7 +77,7 @@ export const useCartStore = create<CartStore>()(
             );
           } else {
             // Check if product is in stock
-            if (product.stockQuantity && product.stockQuantity < 1) {
+            if (product.stock_quantity && product.stock_quantity < 1) {
               toast.error('Product is out of stock');
               return state;
             }

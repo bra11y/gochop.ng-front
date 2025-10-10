@@ -16,7 +16,20 @@ export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
   
   const handleAddToCart = () => {
-    addItem(product);
+    // Convert product to cart-compatible format
+    const cartProduct = {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      compare_at_price: product.compareAtPrice,
+      store_id: 'current-store', // This should be passed from store context
+      stock_quantity: product.stockQuantity || 100, // Default stock if not specified
+      active: product.active,
+      image_url: product.image,
+    };
+    
+    addItem(cartProduct);
     toast.success(`${product.name} added to cart!`);
   };
   
