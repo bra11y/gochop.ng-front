@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Improve input field contrast */
+@layer components {
+  .input-field {
+    @apply bg-white border border-gray-300 text-[#112e40] placeholder-gray-500 focus:border-green-500 focus:ring-1 focus:ring-green-500;
+  }
+  
+  .input-field:read-only {
+    @apply bg-gray-50 text-[#112e40];
+  }
+  
+  /* Override default input styles for better contrast */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  textarea,
+  select {
+    @apply input-field;
+  }
+  
+  /* Specific overrides for low contrast issues */
+  input:not(:focus):not(:read-only) {
+    @apply text-gray-900;
+  }
+  
+  input::placeholder {
+    @apply text-gray-500 opacity-100;
+  }
+  
+  /* Better button contrast */
+  .btn-primary {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+button:focus,
+a:focus {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}

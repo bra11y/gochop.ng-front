@@ -12,14 +12,17 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   }
 })
 
-// Admin client for server-side operations
-export const supabaseAdmin = createClient<Database>(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+// Admin client for server-side operations (fallback to regular client if no service key)
+const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+export const supabaseAdmin = serviceKey && serviceKey.startsWith('sb') 
+  ? createClient<Database>(
+      supabaseUrl,
+      serviceKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
+  : supabase; // Fallback to regular client for development

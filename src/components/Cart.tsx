@@ -10,7 +10,29 @@ import { toast } from 'react-hot-toast';
 
 export default function Cart() {
   const router = useRouter();
-  const { items, isOpen, toggleCart, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
+  const { items, isOpen, toggleCart, removeItem, updateQuantity, getTotalPrice, clearCart, addItem } = useCartStore();
+  
+  // Add test products for demonstration if cart is empty
+  const addTestProducts = () => {
+    const testProducts = [
+      {
+        id: 'test-1',
+        name: 'Premium Pizza Margherita',
+        price: 4500,
+        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+        stock_quantity: 10
+      },
+      {
+        id: 'test-2', 
+        name: 'Chinese Fried Rice',
+        price: 2800,
+        image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=300&fit=crop',
+        stock_quantity: 15
+      }
+    ];
+    
+    testProducts.forEach(product => addItem(product as any));
+  };
   
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-NG', {
@@ -26,7 +48,10 @@ export default function Cart() {
       return;
     }
     toggleCart();
-    router.push('/checkout');
+    // Get current store slug from URL
+    const currentPath = window.location.pathname;
+    const storeSlug = currentPath.split('/')[1];
+    router.push(`/${storeSlug}/checkout`);
   };
   
   return (
@@ -83,8 +108,15 @@ export default function Cart() {
                             <ShoppingBag className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                             <p className="text-gray-500">Your cart is empty</p>
                             <button
+                              onClick={addTestProducts}
+                              className="mt-4 mb-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium"
+                            >
+                              Add Test Products
+                            </button>
+                            <br />
+                            <button
                               onClick={toggleCart}
-                              className="mt-4 text-green-600 hover:text-green-700 font-medium"
+                              className="mt-2 text-green-600 hover:text-green-700 font-medium"
                             >
                               Continue Shopping
                             </button>

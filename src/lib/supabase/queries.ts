@@ -14,7 +14,6 @@ export const storeQueries = {
       .from('stores')
       .select('*')
       .eq('slug', slug)
-      .eq('status', 'active')
       .single()
     
     if (error) throw error
@@ -25,6 +24,18 @@ export const storeQueries = {
     const { data, error } = await supabase
       .from('stores')
       .insert([store])
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async update(storeId: string, updates: Database['public']['Tables']['stores']['Update']) {
+    const { data, error } = await supabase
+      .from('stores')
+      .update(updates)
+      .eq('id', storeId)
       .select()
       .single()
     
@@ -45,20 +56,34 @@ export const categoryQueries = {
     
     if (error) throw error
     return data
+  },
+
+  async create(category: Database['public']['Tables']['categories']['Insert']) {
+    const { data, error } = await supabase
+      .from('categories')
+      .insert([category])
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
   }
 }
 
 // Product Operations
 export const productQueries = {
-  async getByStore(storeId: string, categoryId?: string) {
+  async getByStore(storeId: string, categoryId?: string, includeInactive: boolean = false) {
     let query = supabase
       .from('products')
       .select(`
         *,
-        category:categories(*)
+        categories(*)
       `)
       .eq('store_id', storeId)
-      .eq('active', true)
+
+    if (!includeInactive) {
+      query = query.eq('active', true)
+    }
 
     if (categoryId) {
       query = query.eq('category_id', categoryId)
@@ -74,8 +99,8 @@ export const productQueries = {
       .from('products')
       .select(`
         *,
-        category:categories(*),
-        store:stores(*)
+        categories(*),
+        stores(*)
       `)
       .eq('id', id)
       .eq('active', true)
@@ -83,6 +108,39 @@ export const productQueries = {
     
     if (error) throw error
     return data
+  },
+
+  async create(product: Database['public']['Tables']['products']['Insert']) {
+    const { data, error } = await supabase
+      .from('products')
+      .insert([product])
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async update(id: string, updates: Database['public']['Tables']['products']['Update']) {
+    const { data, error } = await supabase
+      .from('products')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
+    
+    if (error) throw error
+    return true
   }
 }
 
@@ -116,7 +174,7 @@ export const orderQueries = {
         *,
         order_items(
           *,
-          product:products(*)
+          products(*)
         )
       `)
       .eq('id', id)
@@ -133,11 +191,51 @@ export const orderQueries = {
         *,
         order_items(
           *,
-          product:products(*)
+          products(*)
         )
       `)
       .eq('store_id', storeId)
       .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    return data
+  },
+
+  async updateStatus(orderId: string, status: string) {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status })
+      .eq('id', orderId)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async updatePaymentStatus(orderId: string, paymentStatus: string) {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ payment_status: paymentStatus })
+      .eq('id', orderId)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async updateOrderAndPayment(orderId: string, status: string, paymentStatus: string) {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ 
+        status,
+        payment_status: paymentStatus,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId)
+      .select()
+      .single()
     
     if (error) throw error
     return data

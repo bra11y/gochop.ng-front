@@ -9,7 +9,7 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      stores: {
+      store: {
         Row: {
           id: string
           name: string
@@ -68,7 +68,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      categories: {
+      category: {
         Row: {
           id: string
           store_id: string
@@ -103,7 +103,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      products: {
+      product: {
         Row: {
           id: string
           store_id: string
@@ -153,7 +153,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      orders: {
+      order: {
         Row: {
           id: string
           store_id: string
@@ -206,7 +206,7 @@ export interface Database {
           updated_at?: string
         }
       }
-      order_items: {
+      order_item: {
         Row: {
           id: string
           order_id: string

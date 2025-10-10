@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import AdminNav from "@/components/AdminNav";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FoodCart - Simplify Your Sales",
-  description: "Multi-tenant grocery delivery platform",
+  title: "GochopNg - Your Digital Marketplace",
+  description: "The future of online business in Nigeria - connecting vendors with customers",
 };
 
 export default function RootLayout({
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <AdminNav />
+        </Providers>
       </body>
     </html>
   );
