@@ -5,8 +5,8 @@
   "installCommand": "npm install",
   "outputDirectory": ".next",
   "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
+    "src/app/api/**/*.ts": {
+      "runtime": "nodejs20.x"
     }
   }
 }
