@@ -88,7 +88,7 @@ export default function SaaSLandingPage() {
                 Sign In
               </button>
               <button 
-                onClick={() => router.push('/onboarding')}
+                onClick={() => router.push('/start-free')}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition"
               >
                 Start Free

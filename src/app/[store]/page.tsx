@@ -25,31 +25,34 @@ function StorePageContent() {
   // Add mock products for testing cart UI when no real products exist
   const mockProducts = products.length === 0 ? [
     {
-      id: 'mock-1',
+      id: '123e4567-e89b-12d3-a456-426614174001', // Use proper UUID format
       name: 'Premium Pizza Margherita',
       description: 'Fresh tomatoes, mozzarella, basil on crispy crust',
       price: 4500,
       stock_quantity: 10,
       image_url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
-      category: { name: 'FOOD' }
+      category: { name: 'FOOD' },
+      is_mock: true // Flag to identify mock products
     },
     {
-      id: 'mock-2',
+      id: '123e4567-e89b-12d3-a456-426614174002', // Use proper UUID format
       name: 'Chinese Fried Rice',
       description: 'Aromatic fried rice with vegetables and eggs',
       price: 2800,
       stock_quantity: 15,
       image_url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=300&fit=crop',
-      category: { name: 'FOOD' }
+      category: { name: 'FOOD' },
+      is_mock: true // Flag to identify mock products
     },
     {
-      id: 'mock-3',
+      id: '123e4567-e89b-12d3-a456-426614174003', // Use proper UUID format
       name: 'Fresh Coca Cola',
       description: 'Refreshing cold beverage',
       price: 1000,
       stock_quantity: 25,
       image_url: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=300&fit=crop',
-      category: { name: 'DRINK' }
+      category: { name: 'DRINK' },
+      is_mock: true // Flag to identify mock products
     }
   ] : products;
 

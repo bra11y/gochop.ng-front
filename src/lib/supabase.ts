@@ -86,7 +86,7 @@ export const supabaseAPI = {
   // Stores
   async createStore(data: Partial<Store>) {
     const { data: store, error } = await supabase
-      .from('stores')
+      .from('store')
       .insert([data])
       .select()
       .single()
@@ -97,7 +97,7 @@ export const supabaseAPI = {
 
   async getStore(slug: string) {
     const { data: store, error } = await supabase
-      .from('stores')
+      .from('store')
       .select('*')
       .eq('slug', slug)
       .single()

@@ -59,7 +59,7 @@ export default function AddProductModal({ storeId, categories, onClose, onSucces
     try {
       const productData = {
         store_id: storeId,
-        category_id: formData.category_id,
+        category_id: formData.category_id || null, // Fix: Use null instead of empty string
         name: formData.name,
         slug: generateSlug(formData.name),
         description: formData.description || null,

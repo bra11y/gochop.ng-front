@@ -123,7 +123,7 @@ export default function CSVImport({ storeId, onSuccess, onClose }: CSVImportProp
           // Create product (handle optional sku column)
           const productData: any = {
             store_id: storeId,
-            category_id: categoryId,
+            category_id: categoryId || null, // Fix: Use null instead of empty string
             name: row.name,
             slug: generateSlug(row.name),
             description: row.description || null,

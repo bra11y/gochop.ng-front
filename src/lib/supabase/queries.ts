@@ -17,7 +17,7 @@ type OrderItem = any
 export const storeQueries = {
   async getBySlug(slug: string) {
     const { data, error } = await supabase
-      .from('stores')
+      .from('store')
       .select('*')
       .eq('slug', slug)
       .single()
@@ -28,7 +28,7 @@ export const storeQueries = {
 
   async create(store: any) {
     const { data, error } = await supabase
-      .from('stores')
+      .from('store')
       .insert([store])
       .select()
       .single()
@@ -39,7 +39,7 @@ export const storeQueries = {
 
   async update(storeId: string, updates: any) {
     const { data, error } = await supabase
-      .from('stores')
+      .from('store')
       .update(updates)
       .eq('id', storeId)
       .select()
@@ -106,7 +106,7 @@ export const productQueries = {
       .select(`
         *,
         categories(*),
-        stores(*)
+        store(*)
       `)
       .eq('id', id)
       .eq('active', true)

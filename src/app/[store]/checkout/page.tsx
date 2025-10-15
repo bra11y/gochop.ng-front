@@ -72,17 +72,18 @@ function CheckoutPageContent() {
         } : {}
       });
 
-      // Create order items
+      // Create order items (handle mock products)
       const orderItems = items.map(item => ({
         order_id: (order as any).id,
-        product_id: item.id,
+        product_id: (item as any).is_mock ? null : item.id, // Use null for mock products
         quantity: item.quantity,
         unit_price: item.price,
         total_price: item.price * item.quantity,
         product_snapshot: {
           name: item.name,
           image: item.image_url,
-          description: item.description
+          description: item.description,
+          is_mock: (item as any).is_mock || false
         }
       }));
 
