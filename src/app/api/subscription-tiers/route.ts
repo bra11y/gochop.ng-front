@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform database format to frontend format
-    const formattedTiers = tiers.map(tier => ({
+    const formattedTiers = (tiers as any[])?.map((tier: any) => ({
       id: tier.name,
       name: tier.display_name,
       price_monthly: tier.price_monthly,
