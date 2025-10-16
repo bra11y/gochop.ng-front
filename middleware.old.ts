@@ -1,10 +1,11 @@
+// BACKUP OF ORIGINAL MIDDLEWARE
+
 // ENTERPRISE-GRADE MIDDLEWARE FOR ROUTE PROTECTION
 // Implements role-based access control with session management
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
-import { checkRateLimit, createRateLimitHeaders } from "./src/lib/rate-limit";
 
 // Define route patterns and required permissions
 const PROTECTED_ROUTES = {
@@ -92,37 +93,9 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("auth_token")?.value;
 
-  // Enterprise rate limiting - Apply to all routes
-  const rateLimitResult = await checkRateLimit(request);
-
-  if (rateLimitResult.blocked) {
-    const response = new NextResponse(
-      JSON.stringify({
-        error: "Rate limit exceeded",
-        message: rateLimitResult.reason,
-        retryAfter: rateLimitResult.retryAfter,
-      }),
-      {
-        status: 429,
-        headers: {
-          "Content-Type": "application/json",
-          ...createRateLimitHeaders(rateLimitResult),
-        },
-      },
-    );
-    return addSecurityHeaders(response);
-  }
-
   // Allow public routes without authentication
   if (isPublicRoute(pathname)) {
-    const response = NextResponse.next();
-    // Add rate limit headers to all responses
-    Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-      ([key, value]) => {
-        response.headers.set(key, value);
-      },
-    );
-    return addSecurityHeaders(response);
+    return addSecurityHeaders(NextResponse.next());
   }
 
   // Check if route requires authentication
@@ -130,28 +103,14 @@ export async function middleware(request: NextRequest) {
 
   if (!requiredRoles) {
     // Route doesn't require specific permissions, but may need auth
-    const response = NextResponse.next();
-    // Add rate limit headers to all responses
-    Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-      ([key, value]) => {
-        response.headers.set(key, value);
-      },
-    );
-    return addSecurityHeaders(response);
+    return addSecurityHeaders(NextResponse.next());
   }
 
   // Protected route - verify token
   if (!token) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
-    const response = NextResponse.redirect(loginUrl);
-    // Add rate limit headers even to redirects
-    Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-      ([key, value]) => {
-        response.headers.set(key, value);
-      },
-    );
-    return response;
+    return NextResponse.redirect(loginUrl);
   }
 
   // Verify and validate token
@@ -161,12 +120,6 @@ export async function middleware(request: NextRequest) {
     // Invalid token - redirect to login
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete("auth_token");
-    // Add rate limit headers
-    Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-      ([key, value]) => {
-        response.headers.set(key, value);
-      },
-    );
     return addSecurityHeaders(response);
   }
 
@@ -174,12 +127,6 @@ export async function middleware(request: NextRequest) {
   if (user.status !== "active") {
     const response = NextResponse.redirect(
       new URL("/account-suspended", request.url),
-    );
-    // Add rate limit headers
-    Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-      ([key, value]) => {
-        response.headers.set(key, value);
-      },
     );
     return addSecurityHeaders(response);
   }
@@ -189,12 +136,24 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.redirect(
       new URL("/unauthorized", request.url),
     );
-    // Add rate limit headers
-    Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-      ([key, value]) => {
-        response.headers.set(key, value);
-      },
-    );
+    return addSecurityHeaders(response);
+  }
+
+  // Rate limiting for admin routes
+  if (pathname.startsWith("/admin")) {
+    const ip =
+      request.headers.get("x-forwarded-for") ||
+      request.headers.get("x-real-ip") ||
+      "unknown";
+    const rateLimitKey = `admin_rate_limit:${ip}:${user.id}`;
+
+    // In production, implement Redis-based rate limiting
+    // For now, add rate limit headers
+    const response = NextResponse.next();
+    response.headers.set("X-RateLimit-Limit", "100");
+    response.headers.set("X-RateLimit-Remaining", "99");
+    response.headers.set("X-RateLimit-Reset", String(Date.now() + 3600000));
+
     return addSecurityHeaders(response);
   }
 
@@ -203,13 +162,6 @@ export async function middleware(request: NextRequest) {
   response.headers.set("x-user-id", user.id);
   response.headers.set("x-user-role", user.role);
   response.headers.set("x-session-id", user.sessionId);
-
-  // Add rate limit headers to all authenticated responses
-  Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(
-    ([key, value]) => {
-      response.headers.set(key, value);
-    },
-  );
 
   return addSecurityHeaders(response);
 }
