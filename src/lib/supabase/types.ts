@@ -9,6 +9,65 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      store: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          email: string
+          phone: string | null
+          address: string | null
+          city: string | null
+          state: string | null
+          country: string | null
+          latitude: number | null
+          longitude: number | null
+          delivery_radius_km: number | null
+          status: 'pending' | 'active' | 'suspended'
+          settings: Json
+          theme: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          email: string
+          phone?: string | null
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          country?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          delivery_radius_km?: number | null
+          status?: 'pending' | 'active' | 'suspended'
+          settings?: Json
+          theme?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          email?: string
+          phone?: string | null
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          country?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          delivery_radius_km?: number | null
+          status?: 'pending' | 'active' | 'suspended'
+          settings?: Json
+          theme?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
       stores: {
         Row: {
           id: string
@@ -239,6 +298,76 @@ export interface Database {
           product_snapshot?: Json
           created_at?: string
           updated_at?: string
+        }
+      }
+      users: {
+        Row: {
+          id: string
+          email: string
+          password_hash: string
+          first_name: string
+          last_name: string
+          phone: string | null
+          role: 'store_owner' | 'customer' | 'platform_admin'
+          status: string
+          login_attempts: number
+          locked_until: string | null
+          last_login_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          password_hash: string
+          first_name: string
+          last_name: string
+          phone?: string | null
+          role?: 'store_owner' | 'customer' | 'platform_admin'
+          status?: string
+          login_attempts?: number
+          locked_until?: string | null
+          last_login_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          password_hash?: string
+          first_name?: string
+          last_name?: string
+          phone?: string | null
+          role?: 'store_owner' | 'customer' | 'platform_admin'
+          status?: string
+          login_attempts?: number
+          locked_until?: string | null
+          last_login_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      user_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          token_hash: string
+          expires_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          token_hash: string
+          expires_at: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          token_hash?: string
+          expires_at?: string
+          created_at?: string
         }
       }
     }
