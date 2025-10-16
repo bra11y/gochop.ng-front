@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
+// TODO: Re-enable tenant routing after Phase 1 completion
+// import { getTenantDatabase, executeWithMonitoring } from '@/lib/tenant/router'
 
 // Create an untyped client to avoid type issues
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
+// Legacy client for backward compatibility
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Use any types for now to avoid Supabase typing issues
@@ -13,7 +16,7 @@ type Category = any
 type Order = any
 type OrderItem = any
 
-// Store Operations
+// Store Operations (Tenant Context will be added in Phase 1 completion)
 export const storeQueries = {
   async getBySlug(slug: string) {
     const { data, error } = await supabase
